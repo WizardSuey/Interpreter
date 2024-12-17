@@ -37,6 +37,8 @@ typedef struct {
     Value* values;
 } ValueArray;   // Пул констант представляющий собой массив значений
 
+
+bool valuesEqual(Value a, Value b);
 void initValueArray(ValueArray* array);
 void writeValueArray(ValueArray* array, Value value);
 void freeValueArray(ValueArray* array);
