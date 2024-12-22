@@ -12,6 +12,7 @@ typedef struct {
     uint8_t* ip;    // Указатель инструкций. Указывает на инструкцию, которая будет выполнена
     Value stack[STACK_MAX]; // Стек
     Value* stackTop; // Указатель на вершину стека. всегда указывает сразу за последним элементом
+    Obj* objects; //* Список объектов
 } VM;   // Структура виртуальной машины
 
 typedef enum {
@@ -19,6 +20,8 @@ typedef enum {
     INTERPRET_COMPILE_ERROR,
     INTERPRET_RUNTIME_ERROR,
 } InterpretResult;  // Результат работы интерпретации чанка кода
+
+extern VM vm;
 
 
 void initVM();
