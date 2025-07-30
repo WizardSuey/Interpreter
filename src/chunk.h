@@ -9,6 +9,14 @@ typedef enum {
     OP_NIL,
     OP_TRUE,
     OP_FALSE,
+    OP_POP, // Оператор выражения, извлекает верхнее значение и забывает о нём
+    OP_GET_LOCAL, // Оператор выражения, извлекает значение локальной переменной из стека
+    OP_SET_LOCAL,   // Оператор выражения, сохраняет значение локальной переменной в стеке
+    OP_GET_GLOBAL, // Оператор выражения, извлекает значение глобальной переменной из таблицы глобальных переменных
+    OP_DEFINE_GLOBAL, // Оператор выражения, сохраняет значение глобальной переменной в таблице глобальных переменных
+    OP_SET_GLOBAL,
+    OP_GET_UPVALUE,
+    OP_SET_UPVALUE,
     OP_EQUAL,
     OP_GREATER,
     OP_LESS,
@@ -18,16 +26,23 @@ typedef enum {
     OP_DIVIDE,
     OP_NOT,
     OP_NEGATE,
+    OP_PRINT,
+    OP_JUMP,
+    OP_JUMP_IF_FALSE,
+    OP_LOOP,
+    OP_CALL,
+    OP_CLOSURE,
+    OP_CLOSE_UPVALUE,
     OP_RETURN,
-} OpCode;   // Инструкция
+} OpCode;
 
 typedef struct {
     int count;
     int capacity;
-    uint8_t* code;  // Указатель на массив инструкций
-    int* lines;     // массив строк
-    ValueArray constants; // пул констант
-} Chunk;    // Динамический массив инструкций
+    uint8_t* code;
+    int* lines;
+    ValueArray constants;
+} Chunk;
 
 void initChunk(Chunk* chunk);
 void freeChunk(Chunk* chunk);

@@ -1,11 +1,9 @@
 #include <stdlib.h>
-
-#include "chunk.h"
 #include "memory.h"
+#include "chunk.h"
 
 void initChunk(Chunk* chunk) {
-    // Обнуление массива инструкций
-    chunk->count = 0;
+    chunk-> count = 0;
     chunk->capacity = 0;
     chunk->code = NULL;
     chunk->lines = NULL;
@@ -13,7 +11,6 @@ void initChunk(Chunk* chunk) {
 }
 
 void freeChunk(Chunk* chunk) {
-    // Освобождение массива инструкций
     FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
     FREE_ARRAY(int, chunk->lines, chunk->capacity);
     freeValueArray(&chunk->constants);
@@ -21,8 +18,8 @@ void freeChunk(Chunk* chunk) {
 }
 
 void writeChunk(Chunk* chunk, uint8_t byte, int line) {
-    // Добавление байта в конец массива и обновление массива строк
-    if (chunk->capacity < chunk->count + 1) {
+    // Запись байта в конец буфера
+    if (chunk->capacity < chunk-> count + 1) {
         int oldCapacity = chunk->capacity;
         chunk->capacity = GROW_CAPACITY(oldCapacity);
         chunk->code = GROW_ARRAY(uint8_t, chunk->code, oldCapacity, chunk->capacity);
@@ -35,8 +32,6 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
 }
 
 int addConstant(Chunk* chunk, Value value) {
-    // Добавление константы в пул констант
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;
 }
-

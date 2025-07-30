@@ -1,19 +1,18 @@
 #include <stdio.h>
-#include <string.h>
+#include "string.h"
+#include <math.h>
 
 #include "object.h"
-#include "memory.h"
 #include "value.h"
+#include "memory.h"
 
 void initValueArray(ValueArray* array) {
-    // Инициализация пула констант (обнуление)
     array->values = NULL;
     array->capacity = 0;
     array->count = 0;
 }
 
 void writeValueArray(ValueArray* array, Value value) {
-    // Запись значения в пул констант
     if (array->capacity < array->count + 1) {
         int oldCapacity = array->capacity;
         array->capacity = GROW_CAPACITY(oldCapacity);
@@ -25,34 +24,40 @@ void writeValueArray(ValueArray* array, Value value) {
 }
 
 void freeValueArray(ValueArray* array) {
-    // Освобождение пула констант
     FREE_ARRAY(Value, array->values, array->capacity);
     initValueArray(array);
 }
 
 void printValue(Value value) {
-    // Печать значения
     switch (value.type) {
         case VAL_BOOL:
             printf(AS_BOOL(value) ? "true" : "false");
             break;
-        case VAL_NIL: printf("nil"); break;
-        case VAL_NUMBER: printf("%g", AS_NUMBER(value)); break;
+        case VAL_NIL:
+            printf("nil");
+            break;
+        case VAL_NUMBER: {
+            double num = AS_NUMBER(value);
+            if (floor(num) == num) {
+                // Целое число, выводим без дробной части
+                printf("%.0f", num);
+            } else {
+                // Не целое, выводим с дробной частью
+                printf("%f", num);
+            }
+            break;
+        }
         case VAL_OBJ: printObject(value); break;
     }
 }
 
 bool valuesEqual(Value a, Value b) {
     if (a.type != b.type) return false;
-    switch (a.type) {
-        case VAL_BOOL:      return AS_BOOL(a) == AS_BOOL(b);
-        case VAL_NIL:       return true;
-        case VAL_NUMBER:    return AS_NUMBER(a) == AS_NUMBER(b);
-        case VAL_OBJ: {
-            ObjString* aString = AS_STRING(a);
-            ObjString* bString = AS_STRING(b);
-            return aString->length == bString->length && memcmp(aString->chars, bString->chars, aString->length) == 0;
-        }
-        default:            return false;
+    switch(a.type) {
+        case VAL_BOOL: return AS_BOOL(a) == AS_BOOL(b);
+        case VAL_NIL: return true;
+        case VAL_NUMBER: return AS_NUMBER(a) == AS_NUMBER(b);
+        case VAL_OBJ: return AS_OBJ(a) == AS_OBJ(b);
+        default: return false;
     }
 }

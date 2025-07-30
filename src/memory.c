@@ -1,14 +1,7 @@
 #include <stdlib.h>
-
 #include "memory.h"
 #include "vm.h"
 
-
-//  oldSize	        newSize	                Операция \
-    0	            Non‑zero	            Выделить новый блок.\
-    Non‑zero	    0	                    Освободить блок.\
-    Non‑zero	    Меньше чем oldSize	    Сжать существующее выделение.\
-    Non‑zero	    Больше чем oldSize	    Увеличение существующего выделение.
 void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
     if (newSize == 0) {
         free(pointer);
@@ -21,19 +14,35 @@ void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
 }
 
 static void freeObject(Obj* object) {
-    //* Освобождение памяти объекта
     switch (object->type) {
+        case OBJ_CLOSURE: {
+            FREE(ObjClosure, object);
+            break;
+        }
+        case OBJ_FUNCTION: {
+            ObjFunction* function = (ObjFunction*)object;
+            freeChunk(&function->chunk);
+            FREE(ObjFunction, object);
+            break;
+        }
+        case OBJ_NATIVE:
+            FREE(ObjNative, object);
+            break;
         case OBJ_STRING: {
             ObjString* string = (ObjString*)object;
             FREE_ARRAY(char, string->chars, string->length + 1);
             FREE(ObjString, object);
             break;
         }
+        case  OBJ_UPVALUE:
+        ObjClosure* closure = (ObjClosure*)object;
+        FREE_ARRAY(ObjUpvalue*, closure->upvalues, closure->upvalueCount);
+            FREE(ObjUpvalue, object);
+            break;
     }
 }
 
 void freeObjects() {
-    //* Освобождение списка объектов
     Obj* object = vm.objects;
     while (object != NULL) {
         Obj* next = object->next;

@@ -3,14 +3,13 @@
 #include <string.h>
 
 #include "common.h"
-#include "chunk.h"
-#include "debug.h"
 #include "vm.h"
 
+#define FILE_EXTENSION ".lox"
+
 static void repl() {
-    // Запуск cli
     char line[1024];
-    for (;;) {
+    for(;;) {
         printf("> ");
 
         if (!fgets(line, sizeof(line), stdin)) {
@@ -23,29 +22,26 @@ static void repl() {
 }
 
 static char* readFile(const char* path) {
-    // Чтение файла
     FILE* file = fopen(path, "rb");
     if (file == NULL) {
-        fprintf(stderr, "Could not open file \"%s\".\n", path);
+        fprintf(stderr, "Could not open file %s\n", path);
         exit(74);
     }
 
-    fseek(file, 0L, SEEK_END); // Устанавливаем курсор в конец файла
-    size_t fileSize = ftell(file);  // узнаём кол-во байт от начала файла
-    rewind(file);   // Возвращаем курсор в начало файла
+    fseek(file, 0L, SEEK_END);
+    size_t fileSize = ftell(file);
+    rewind(file);
 
     char* buffer = (char*)malloc(fileSize + 1);
     if (buffer == NULL) {
-        fprintf(stderr, "Not enough memory to read \"%s\".\n", path);
+        fprintf(stderr, "Not enough memory to read %s\n", path);
         exit(74);
     }
-
     size_t bytesRead = fread(buffer, sizeof(char), fileSize, file);
     if (bytesRead < fileSize) {
-        fprintf(stderr, "Could not read file \"%s\".\n", path);
+        fprintf(stderr, "Could not read file %s\n", path);
         exit(74);
     }
-    
     buffer[bytesRead] = '\0';
 
     fclose(file);
@@ -53,7 +49,12 @@ static char* readFile(const char* path) {
 }
 
 static void runFile(const char* path) {
-    // Запуск скрипта из файла
+    const char* extension = strstr(path, FILE_EXTENSION);
+    if (!extension || strcmp(extension, FILE_EXTENSION) != 0) {
+        fprintf(stderr, "Error: File must have a .lox extension\n");
+        exit(112);
+    }
+
     char* source = readFile(path);
     InterpretResult result = interpret(source);
     free(source);
@@ -73,7 +74,7 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "Usage: clox [path]\n");
         exit(64);
     }
-    
+
     freeVM();
     return 0;
 }

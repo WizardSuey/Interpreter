@@ -1,0 +1,38 @@
+if (4 < 3) 
+  print "a";
+else 
+  print "b";
+
+
+
+
+
+constatns       code                            addr
+4               OP_CONSTANT                     0           Chunk->count = 1
+3               0                               1           Chunk->count = 2
+"a"             OP_CONSTANT                     2           Chunk->count = 3
+"b"             1                               3           Chunk->count = 4
+                OP_LESS                         4           Chunk->count = 5
+                OP_JUMP_IF_FALSE                5           Chunk->count = 6              
+                0x0                             6           Chunk->count = 7
+                0x7                             7           Chunk->count = 8    return currentChunk()->count - 2; = 6 thenJump = 6
+                OP_POP                          8           Chunk->count = 9
+                OP_CONSTANT                     9           Chunk->count = 10
+                2                              10           Chunk->count = 11
+                OP_PRINT                       11           Chunk->count = 12
+                OP_JUMP                        12           Chunk->count = 13
+                0x0                            13           Chunk->count = 14
+                0x4                            14           Chunk->count = 15   return currentChunk()->count - 2; = 13 elseJump = 13
+                                                                                PatchJump(thenJump=6) jump = 15-6-2 = 7
+                                                                                currentChunk()->code[offset=6] = (jump=7 >> 8) & 0xff; = 0
+                                                                                currentChunk()->code[offset=6 + 1] = jump=7 & 0xff;    = 7
+                OP_POP                         15           Chunk->count = 16
+                OP_CONSTANT                    16           Chunk->count = 17
+                3                              17           Chunk->count = 18
+                OP_PRINT                       18           Chunk->count = 19   patchJump(elseJump=13);
+                                                                                int jump = currentChunk()->count - offset - 2; 19-13-2 = 4
+                                                                                currentChunk()->code[offset=13] = (jump=4 >> 8) & 0xff; = 0
+                                                                                currentChunk()->code[offset=13] = jump=4 & 0xff;        = 4
+   
+
+

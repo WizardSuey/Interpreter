@@ -1,0 +1,29 @@
+var a = 2;
+print a;
+																				constatns						code
+
+1) a - Записывается в Chunk-constants,  										(Obj*)ObjString* a		
+
+2) OP_CONSTANT - записывается в Chunk->code																		OP_CONSTANT
+				
+3) индекс 2 (1) - записывается в Chunk->code, а сама 2 в Chunk->constants		2								1
+
+4) OP_DEFINE_GLOBAL - записывается в Chunk->code																OP_DEFINE_GLOBAL
+
+5) индекс a (0) - записывается в Chunk->code									(Obj*)ObjString* a				2
+
+6) OP_GET_GLOBAL - записывается в Chunk->code																	OP_GET_GLOBAL
+
+7) индекс a (0) - Записывается в Chunk->code									(Obj*)ObjString* a				3
+
+8) OP_PRINT - записывается в Chunk->code																		OP_PRINT
+
+
+В vm.c run()
+
+1) OP_CONSTANT. 2 записывется в стэк
+2) OP_DEFINE_GLOBAL. tableSet(&vm.globals, (Obj*)ObjString* a, 2) - Записывем в таблицу глобальных переменных a - ключ, 2 - значение
+3) OP_DEFINE_GLOBAL. оставли значение 2 из стека
+4) OP_GET_GLOBAL. tableGet(&vm.globals,(Obj*)ObjString* a) - Находим переменную в таблице глобальных переменных
+5) OP_GET_GLOBAL. Записываем значение 2 в стэк
+6) OP_PRINT. Достаем значение 2 из стэка и печатаем его

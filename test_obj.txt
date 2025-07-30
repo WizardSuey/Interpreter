@@ -1,0 +1,92 @@
+
+test.o:     file format pe-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:	55                   	push   %rbp
+   1:	48 89 e5             	mov    %rsp,%rbp
+   4:	48 83 ec 20          	sub    $0x20,%rsp
+   8:	e8 00 00 00 00       	call   d <main+0xd>
+   d:	48 8d 05 00 00 00 00 	lea    0x0(%rip),%rax        # 14 <main+0x14>
+  14:	48 89 c1             	mov    %rax,%rcx
+  17:	e8 00 00 00 00       	call   1c <main+0x1c>
+  1c:	b8 00 00 00 00       	mov    $0x0,%eax
+  21:	48 83 c4 20          	add    $0x20,%rsp
+  25:	5d                   	pop    %rbp
+  26:	c3                   	ret    
+  27:	90                   	nop
+  28:	90                   	nop
+  29:	90                   	nop
+  2a:	90                   	nop
+  2b:	90                   	nop
+  2c:	90                   	nop
+  2d:	90                   	nop
+  2e:	90                   	nop
+  2f:	90                   	nop
+
+Disassembly of section .rdata:
+
+0000000000000000 <.rdata>:
+   0:	48                   	rex.W
+   1:	65 6c                	gs insb (%dx),%es:(%rdi)
+   3:	6c                   	insb   (%dx),%es:(%rdi)
+   4:	6f                   	outsl  %ds:(%rsi),(%dx)
+   5:	2c 20                	sub    $0x20,%al
+   7:	57                   	push   %rdi
+   8:	6f                   	outsl  %ds:(%rsi),(%dx)
+   9:	72 6c                	jb     77 <.rdata+0x77>
+   b:	64 21 00             	and    %eax,%fs:(%rax)
+	...
+
+Disassembly of section .xdata:
+
+0000000000000000 <.xdata>:
+   0:	01 08                	add    %ecx,(%rax)
+   2:	03 05 08 32 04 03    	add    0x3043208(%rip),%eax        # 3043210 <.xdata+0x3043210>
+   8:	01 50 00             	add    %edx,0x0(%rax)
+	...
+
+Disassembly of section .pdata:
+
+0000000000000000 <.pdata>:
+   0:	00 00                	add    %al,(%rax)
+   2:	00 00                	add    %al,(%rax)
+   4:	27                   	(bad)  
+   5:	00 00                	add    %al,(%rax)
+   7:	00 00                	add    %al,(%rax)
+   9:	00 00                	add    %al,(%rax)
+	...
+
+Disassembly of section .rdata$zzz:
+
+0000000000000000 <.rdata$zzz>:
+   0:	47                   	rex.RXB
+   1:	43                   	rex.XB
+   2:	43 3a 20             	rex.XB cmp (%r8),%spl
+   5:	28 4d 69             	sub    %cl,0x69(%rbp)
+   8:	6e                   	outsb  %ds:(%rsi),(%dx)
+   9:	47 57                	rex.RXB push %r15
+   b:	2d 57 36 34 20       	sub    $0x20343657,%eax
+  10:	78 38                	js     4a <.rdata$zzz+0x4a>
+  12:	36 5f                	ss pop %rdi
+  14:	36 34 2d             	ss xor $0x2d,%al
+  17:	75 63                	jne    7c <.rdata$zzz+0x7c>
+  19:	72 74                	jb     8f <.rdata$zzz+0x8f>
+  1b:	2d 70 6f 73 69       	sub    $0x69736f70,%eax
+  20:	78 2d                	js     4f <.rdata$zzz+0x4f>
+  22:	73 65                	jae    89 <.rdata$zzz+0x89>
+  24:	68 2c 20 62 75       	push   $0x7562202c
+  29:	69 6c 74 20 62 79 20 	imul   $0x42207962,0x20(%rsp,%rsi,2),%ebp
+  30:	42 
+  31:	72 65                	jb     98 <.rdata$zzz+0x98>
+  33:	63 68 74             	movsxd 0x74(%rax),%ebp
+  36:	20 53 61             	and    %dl,0x61(%rbx)
+  39:	6e                   	outsb  %ds:(%rsi),(%dx)
+  3a:	64 65 72 73          	fs gs jb b1 <.rdata$zzz+0xb1>
+  3e:	29 20                	sub    %esp,(%rax)
+  40:	31 31                	xor    %esi,(%rcx)
+  42:	2e 33 2e             	cs xor (%rsi),%ebp
+  45:	30 00                	xor    %al,(%rax)
+	...
