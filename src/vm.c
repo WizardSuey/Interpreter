@@ -393,7 +393,7 @@ static InterpretResult run() {
             * Эта функция отвечает за закрытие upvalue и перемещение локальной переменной из стека в кучу. 
             * После этого виртуальная машина может удалить слот из стека, что она и делает, вызывая pop()
             */
-                closeUpvalues(vm.stackTop - 1);
+                closedUpvalues(vm.stackTop - 1);
                 pop();
                 break;
             case OP_RETURN: {
